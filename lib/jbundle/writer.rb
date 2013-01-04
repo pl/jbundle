@@ -1,3 +1,5 @@
+require 'zlib'
+
 module JBundle
   
   class Version
@@ -61,6 +63,20 @@ module JBundle
             @compiler.dir, 
             interpolate(@compiler.min_name, TOKENS[:version] => version_string)
           )
+          if @compiler.gzip?
+            @out << write_gzip_file(
+              @compiler.src,
+              versioned_target,
+              @compiler.dir,
+              interpolate(@compiler.name, TOKENS[:version] => version_string) + ".gz"
+            )
+            @out << write_gzip_file(
+              @compiler.min,
+              versioned_target,
+              @compiler.dir,
+              interpolate(@compiler.min_name, TOKENS[:version] => version_string) + ".gz"
+            )
+          end
         else # Other files (HTML, SWF, etc)
           @out << copy_file(
             @compiler.src_path, 
@@ -108,7 +124,20 @@ module JBundle
       end
       target
     end
-    
+
+    def write_gzip_file(content, dir_name, subdir, file_name)
+      sub = ::File.join([dir_name, subdir].compact)
+      FileUtils.mkdir_p sub
+      target = ::File.join(sub, file_name)
+      JBundle.log("Writing to #{target}")
+      ::File.open(target, 'w') do |f|
+        gz = Zlib::GzipWriter.new(f, Zlib::BEST_COMPRESSION)
+        gz.write content
+        gz.close
+      end
+      target
+    end
+
   end
   
 end

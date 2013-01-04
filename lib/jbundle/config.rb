@@ -31,19 +31,19 @@ module JBundle
       @target_dir = dir if dir
       @target_dir || './'
     end
-    
-    def bundle(names, &block)
+
+    def bundle(names, options = {}, &block)
       name = (names.is_a?(Hash) ? names.keys.first : names).to_sym
       if !b = @bundles.detect{|a| a.name == name}
-        b = Bundle.new(names)
+        b = Bundle.new(names, options)
         @bundles << b
       end
       b.instance_eval &block if block_given?
       b
     end
-    
-    def file(f)
-      @files << JBundle::File.new(f)
+
+    def file(f, options = {})
+      @files << JBundle::File.new(f, options)
     end
     
     def filter(mode = :all, &block)

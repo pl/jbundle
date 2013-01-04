@@ -4,11 +4,12 @@ module JBundle
     
     include Enumerable
     include JBundle::BundleUtils
-    
-    attr_reader :name, :original_name
-    
-    def initialize(name)
+
+    attr_reader :name, :original_name, :options
+
+    def initialize(name, options = {})
       @original_name, @name = parse_name(name)
+      @options = options
     end
     
     def each(&block)
