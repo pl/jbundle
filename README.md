@@ -23,7 +23,8 @@ JBundle.config do
     file 'file2.js'
   end
 
-  bundle 'foo2.js' do
+  # gzip foo2.js and foo2.min.js
+  bundle 'foo2.js', gzip: true do
     file 'file3.js'
     file 'file4.js'
   end
