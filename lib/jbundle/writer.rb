@@ -3,7 +3,7 @@ module JBundle
   class Version
 
     def initialize(string)
-      @major, @minor, @patch = string.split('.')
+      @major, @minor, @patch = string.split('.', 3)
       raise "require (major.minor.patch) eg: 1.3.1" unless @major && @minor && @patch
     end
 
